@@ -1,0 +1,82 @@
+-- создание БД
+CREATE DATABASE TravelAgency2023;
+
+-- удаление таблиц
+DROP TABLE IF EXISTS DimClients;
+DROP TABLE IF EXISTS FctSales;
+DROP TABLE IF EXISTS DimManagers;
+DROP TABLE IF EXISTS DimAirFlight;
+DROP TABLE IF EXISTS DimHotels;
+
+USE TravelAgency2023;
+CREATE TABLE DimClients(
+	ClientID INT IDENTITY,
+	FirstName NVARCHAR(50) NOT NULL,
+	LastName NVARCHAR(50) NOT NULL,
+	BithDate DATETIME2,
+	Passport NVARCHAR(20) NOT NULL,
+	Adress NVARCHAR(150),
+	PhoneNumber VARCHAR(20),
+	TypeClient NVARCHAR(15),
+	CONSTRAINT PK_ClientID_DimClients PRIMARY KEY(ClientID),
+	CONSTRAINT UQ_Passport_DimClients UNIQUE (Passport)
+	);
+
+CREATE TABLE DimManagers(
+	ManagerID INT IDENTITY,
+	FirstName NVARCHAR(50) NOT NULL,
+	LastName NVARCHAR(50) NOT NULL,
+	Passport NVARCHAR(20) NOT NULL,
+	Position NVARCHAR(50),
+	Email NVARCHAR(25),
+	PhoneNumber VARCHAR(20),
+	Territory NVARCHAR(50),
+	CONSTRAINT PK_ManagerID_DimManagers PRIMARY KEY(ManagerID),
+	CONSTRAINT UQ_Passport_DimManagers UNIQUE (Passport)
+	);
+
+CREATE TABLE DimAirFlight(
+	AvialID INT IDENTITY,
+	FlightNumber NVARCHAR(10),
+	Departure DATETIME2 NOT NULL,
+	CityDepature NVARCHAR(25) NOT NULL,
+	CityArrival NVARCHAR(25) NOT NULL,
+	Arrival DATETIME2 NOT NULL,
+	Baggage NVARCHAR(10),
+	CONSTRAINT PK_AvialID_DimAirFlight PRIMARY KEY(AvialID)
+	);
+
+CREATE TABLE DimHotels(
+	HotelID INT IDENTITY,
+	HotelName NVARCHAR(50) NOT NULL,
+	HotelType NVARCHAR(15),
+	Country NVARCHAR(25) NOT NULL,
+	City NVARCHAR(25) NOT NULL,
+	Adress NVARCHAR(150),
+	LocationType NVARCHAR(15),
+	Price MONEY CONSTRAINT DF_Price_DimHotels DEFAULT 200,
+	RoomType NVARCHAR(15),
+	TypeFood NVARCHAR(15),
+	CONSTRAINT PK_HotelID_DimHotels PRIMARY KEY(HotelID),	
+	CONSTRAINT CK_Price_DimHotels CHECK(Price>200)
+	);
+
+CREATE TABLE FctSales (
+	SalesID INT IDENTITY,
+	ClientID INT,
+	HotelID INT,
+	ManagerID INT,
+	AvailID INT,
+	SalesDate DATETIME2 NOT NULL CONSTRAINT DF_SalesDate_FctSales DEFAULT (getdate()),
+	StartDate DATETIME2 NOT NULL,
+	EndDate DATETIME2 NOT NULL,
+	Price MONEY CONSTRAINT DF_Price_FctSales DEFAULT 100,
+	Discount INT CONSTRAINT DF_Discount_FctSales DEFAULT 5,
+	CONSTRAINT PK_SalesID_FctSales PRIMARY KEY(SalesID),
+	CONSTRAINT FK_ClientID_FctSales FOREIGN KEY(ClientID) REFERENCES dbo.DimClients(ClientID),
+	CONSTRAINT FK_HotelID_FctSales FOREIGN KEY(HotelID) REFERENCES dbo.DimHotels(HotelID),
+	CONSTRAINT FK_ManagerID_FctSales FOREIGN KEY(ManagerID) REFERENCES dbo.DimManagers(ManagerID),
+	CONSTRAINT FK_AvailID_FctSales FOREIGN KEY(AvailID) REFERENCES dbo.DimAirFlight(AvialID),
+	CONSTRAINT CK_Discount_FctSales CHECK(Discount>0 AND Discount<20),
+	CONSTRAINT CK_Price_FctSales CHECK(Price>100)
+	);
