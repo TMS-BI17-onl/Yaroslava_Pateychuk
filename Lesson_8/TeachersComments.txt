@@ -1,0 +1,9 @@
+Well done!
+
+Actually, the solution that I expected would be 
+SELECT t1.firstname, t2.lastname
+FROM People t1 CROSS JOIN People t2.
+
+Also, pay attention that if you are commiting sql files, russian alphabet won't be viewed correctly. Use English or commit txt files.
+
+Mark: 10
