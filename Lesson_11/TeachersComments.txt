@@ -1,0 +1,26 @@
+Well done!
+
+-1
+You were kind of on the right track and your solution works the same as mine, but yours is much more complicated which is not needed.
+
+My view of solution:
+MERGE INTO res t
+USING data_for_merge s ON s.Alex=t.function_name
+WHEN MATCHED 
+	THEN UPDATE SET function_count=function_count+1
+WHEN NOT MATCHED AND Alex IS NOT NULL
+	THEN INSERT (function_name, function_count)
+	VALUES (Alex, 1);
+
+MERGE INTO res t
+USING data_for_merge s ON s.Barbara=t.function_name
+WHEN MATCHED 
+	THEN UPDATE SET function_count=function_count+1
+WHEN NOT MATCHED AND Barbara IS NOT NULL
+	THEN INSERT (function_name, function_count)
+	VALUES (Carlos, 1);
+  
+  ...
+
+
+Mark: 9
