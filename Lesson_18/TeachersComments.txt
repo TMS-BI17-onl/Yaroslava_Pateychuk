@@ -1,0 +1,11 @@
+Well done!
+
+5.
+-0.5
+You'll skip those people who is still working in the same department for more then 10 years, 'cause their end date will be null.
+
+6.
+-1
+We can't filter window functions in the same query.
+
+Mark: 9
